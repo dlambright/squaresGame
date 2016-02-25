@@ -1,9 +1,29 @@
-#import numpy as np
+from matplotlib import mpl, pyplot
+import numpy as np
 import random
 import copy
 
 functionCalls = 0
 comparisons = 0
+
+
+def showColorizedBoard(gameBoard):
+    # make a color map of fixed colors
+    cmap = mpl.colors.ListedColormap(['black','red'])
+    bounds=[-1,0,2]
+    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
+
+    # tell imshow about color map so that only set colors are used
+    img = pyplot.imshow(gameBoard,
+                        interpolation='nearest',
+                        cmap = cmap,
+                        norm=norm)
+
+    # make a color bar
+    #pyplot.colorbar(img,cmap=cmap,
+    #                norm=norm,boundaries=bounds,ticks=[-5,0,5])
+
+    pyplot.show()
 
 def printBoard(gameBoard):
     for row in gameBoard:
@@ -151,7 +171,8 @@ def recursiveSolve(gameBoard, pieceArray):
         pieceArray.remove(pieceToTest)
 
         gameBoard = smartInsert(gameBoard, pieceToTest, pieceArray)
-        printBoard(gameBoard)
+        #printBoard(gameBoard)
+        showColorizedBoard(gameBoard)
         print ""
 
 
@@ -188,7 +209,6 @@ for piece in pieceArray:
     printBoard(mainGameBoard)
     print ""
 '''
-
 
 
 
