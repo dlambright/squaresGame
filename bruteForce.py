@@ -1,5 +1,5 @@
 from matplotlib import mpl, pyplot
-import numpy as np
+from numpy import array
 import random
 import copy
 
@@ -8,13 +8,15 @@ comparisons = 0
 
 
 def showColorizedBoard(gameBoard):
+    gameBoardNumpyArray = array(gameBoard)
+
     # make a color map of fixed colors
     cmap = mpl.colors.ListedColormap(['black','red'])
     bounds=[-1,0,2]
     norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
     # tell imshow about color map so that only set colors are used
-    img = pyplot.imshow(gameBoard,
+    img = pyplot.imshow(gameBoardNumpyArray,
                         interpolation='nearest',
                         cmap = cmap,
                         norm=norm)
@@ -24,6 +26,29 @@ def showColorizedBoard(gameBoard):
     #                norm=norm,boundaries=bounds,ticks=[-5,0,5])
 
     pyplot.show()
+
+def gameBoardHeatMap(gameBoard):
+    for i in range(0,len(gameBoard)):
+        for j in range(0, len(gameBoard[i])):
+            if gameBoard[i][j] < 6:
+                tempValue = 0
+                if j < len(gameBoard[i])-1:         # Check Right
+                    if gameBoard[i][j+1] < 6:
+                        tempValue = tempValue + 1
+                if i < len(gameBoard)-1:            # Check Down
+                    if gameBoard[i+1][j] < 6:
+                        tempValue = tempValue + 1
+                if j > 0:                           # Check Left
+                    if gameBoard[i][j-1] < 6:
+                        tempValue = tempValue + 1
+                if i > 0:                           # Check Up
+                    if gameBoard[i-1][j] < 6:
+                        tempValue = tempValue + 1
+
+                gameBoard[i][j] = tempValue
+
+    return gameBoard
+
 
 def printBoard(gameBoard):
     for row in gameBoard:
@@ -41,8 +66,8 @@ def addPieceAtLocation(gameBoard, piece, startX, startY):
     
     for i in range(0, len(piece)):
         for j in range(0, len(piece[i])):
-            if piece[i][j] == 1:
-                gameBoard[startY + i][startX + j] = 1
+            if piece[i][j] == 9:
+                gameBoard[startY + i][startX + j] = 9
 
     return gameBoard 
 
@@ -64,7 +89,7 @@ def isValidMove(gameBoard, piece, startX, startY):
             if startX + j > len(gameBoard[0])-1 or startY + i > len(gameBoard)-1:
                 return False
 
-            if piece[i][j] == 1 and gameBoard[startY + i][startX + j] == 1:
+            if piece[i][j] == 9 and gameBoard[startY + i][startX + j] == 9:
                 #print "overlap error"
                 return False
 
@@ -117,7 +142,7 @@ def gameBoardDeepCompare(gameBoard, gameBoardPrime):
 def gameBoardIsFull(gameBoard):
     for row in gameBoard:
         for item in row:
-            if item == 0:
+            if item < 6:
                 return False
     return True
 
@@ -171,8 +196,9 @@ def recursiveSolve(gameBoard, pieceArray):
         pieceArray.remove(pieceToTest)
 
         gameBoard = smartInsert(gameBoard, pieceToTest, pieceArray)
-        #printBoard(gameBoard)
-        showColorizedBoard(gameBoard)
+        gameBoard = gameBoardHeatMap(gameBoard)
+        printBoard(gameBoard)
+        #showColorizedBoard(gameBoard)
         print ""
 
 
@@ -180,10 +206,10 @@ def recursiveSolve(gameBoard, pieceArray):
 
 
 
-pieceOne = [[0,1],[1,1],[0,1]]
-pieceTwo = [[1,1],[1,0],[1,1]]
-pieceThree = [[1,0],[1,0],[1,0],[1,0]]
-pieceFour = [[1,0],[1,0],[1,0]]
+pieceOne = [[0,9],[9,9],[0,9]]
+pieceTwo = [[9,9],[9,0],[9,9]]
+pieceThree = [[9,0],[9,0],[9,0],[9,0]]
+pieceFour = [[9,0],[9,0],[9,0]]
 
 #pieceFour = [[1,0]]
 #pieceFive = [[1,0],[1,0]]
@@ -197,6 +223,8 @@ pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour] #, pieceFive, pieceSix,
 roomToMove = True
 
 mainGameBoard = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+
+mainGameBoard = gameBoardHeatMap(mainGameBoard)
 
 recursiveSolve(mainGameBoard, pieceArray)
 print "Comparisons : " + str(comparisons)
