@@ -26,13 +26,19 @@ def showColorizedBoard(myturtle, gameBoard):
     square_size = 90
     myturtle.goto(0,0)
 
-    for j in range(len(gameBoard)):
-        myturtle.goto(0,-square_size * j)
-        for i in range(len(gameBoard[j])):
+    for i in range(len(gameBoard)):
+        myturtle.goto(0,-square_size * i)
+        for j in range(len(gameBoard[i])):
             if gameBoard[i][j] == 9:
-                myturtle.color("blue")
-            if gameBoard[i][j] < 9:
+                myturtle.color("white")
+            if gameBoard[i][j] == 1:
                 myturtle.color("red")
+            if gameBoard[i][j] == 2:
+                myturtle.color("orange")
+            if gameBoard[i][j] == 3:
+                myturtle.color("yellow")
+            if gameBoard[i][j] == 4:
+                myturtle.color("green")
 
             draw_filled_square(myturtle, square_size, gameBoard[i][j])
             myturtle.fd(square_size)
