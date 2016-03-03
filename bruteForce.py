@@ -2,30 +2,46 @@ from matplotlib import mpl, pyplot
 from numpy import array
 import random
 import copy
+import turtle
 
 functionCalls = 0
 comparisons = 0
 
 
-def showColorizedBoard(gameBoard):
-    gameBoardNumpyArray = array(gameBoard)
 
-    # make a color map of fixed colors
-    cmap = mpl.colors.ListedColormap(['black','red'])
-    bounds=[-1,0,2]
-    norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
 
-    # tell imshow about color map so that only set colors are used
-    img = pyplot.imshow(gameBoardNumpyArray,
-                        interpolation='nearest',
-                        cmap = cmap,
-                        norm=norm)
 
-    # make a color bar
-    #pyplot.colorbar(img,cmap=cmap,
-    #                norm=norm,boundaries=bounds,ticks=[-5,0,5])
+def draw_filled_square(this_turtle, size, fillNumber):
+    """Draw a square by drawing a line and turning through 90 degrees 4 times"""
+    this_turtle.pendown()
+    this_turtle.fill(True)
+    for _ in range(4):
+        this_turtle.forward(size)
+        this_turtle.left(90)
+    this_turtle.fill(False)
+    this_turtle.penup()
 
-    pyplot.show()
+def showColorizedBoard(myturtle, gameBoard):
+    myturtle.speed(0)
+    square_size = 90
+    myturtle.goto(0,0)
+
+    for j in range(len(gameBoard)):
+        myturtle.goto(0,-square_size * j)
+        for i in range(len(gameBoard[j])):
+            if gameBoard[i][j] == 9:
+                myturtle.color("blue")
+            if gameBoard[i][j] < 9:
+                myturtle.color("red")
+
+            draw_filled_square(myturtle, square_size, gameBoard[i][j])
+            myturtle.fd(square_size)
+
+
+
+
+
+
 
 def gameBoardHeatMap(gameBoard):
     for i in range(0,len(gameBoard)):
@@ -198,7 +214,8 @@ def recursiveSolve(gameBoard, pieceArray):
         gameBoard = smartInsert(gameBoard, pieceToTest, pieceArray)
         gameBoard = gameBoardHeatMap(gameBoard)
         printBoard(gameBoard)
-        #showColorizedBoard(gameBoard)
+        myturtle = turtle.Turtle()
+        showColorizedBoard(myturtle, gameBoard)
         print ""
 
 
