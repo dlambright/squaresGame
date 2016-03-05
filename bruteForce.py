@@ -3,48 +3,10 @@ from numpy import array
 import random
 import copy
 import turtle
+from Tkinter import *
 
 functionCalls = 0
 comparisons = 0
-
-
-
-
-
-def draw_filled_square(this_turtle, size, fillNumber):
-    """Draw a square by drawing a line and turning through 90 degrees 4 times"""
-    this_turtle.pendown()
-    this_turtle.fill(True)
-    for _ in range(4):
-        this_turtle.forward(size)
-        this_turtle.left(90)
-    this_turtle.fill(False)
-    this_turtle.penup()
-
-def showColorizedBoard(myturtle, gameBoard):
-    myturtle.speed(0)
-    square_size = 90
-    myturtle.goto(0,0)
-
-    for i in range(len(gameBoard)):
-        myturtle.goto(0,-square_size * i)
-        for j in range(len(gameBoard[i])):
-            if gameBoard[i][j] == 9:
-                myturtle.color("white")
-            if gameBoard[i][j] == 1:
-                myturtle.color("red")
-            if gameBoard[i][j] == 2:
-                myturtle.color("orange")
-            if gameBoard[i][j] == 3:
-                myturtle.color("yellow")
-            if gameBoard[i][j] == 4:
-                myturtle.color("green")
-
-            draw_filled_square(myturtle, square_size, gameBoard[i][j])
-            myturtle.fd(square_size)
-
-
-
 
 
 
@@ -220,8 +182,7 @@ def recursiveSolve(gameBoard, pieceArray):
         gameBoard = smartInsert(gameBoard, pieceToTest, pieceArray)
         gameBoard = gameBoardHeatMap(gameBoard)
         printBoard(gameBoard)
-        myturtle = turtle.Turtle()
-        showColorizedBoard(myturtle, gameBoard)
+
         print ""
 
 
