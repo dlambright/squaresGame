@@ -4,12 +4,13 @@ import random
 import copy
 import turtle
 from Tkinter import *
+from gameBoardDraw import gameBoardDraw
+
 
 functionCalls = 0
 comparisons = 0
 
-
-
+gameBoardDrawVariable = gameBoardDraw(20)
 
 def gameBoardHeatMap(gameBoard):
     for i in range(0,len(gameBoard)):
@@ -40,7 +41,6 @@ def printBoard(gameBoard):
 
 def flipPiece(piece):
     for row in piece:
-
         row = row.reverse()
 
     return piece
@@ -116,6 +116,10 @@ def gameBoardDeepCopy(gameBoard):
     return tempGameBoard
 
 def gameBoardDeepCompare(gameBoard, gameBoardPrime):
+
+    if gameBoard == None or gameBoardPrime == None:
+        return True
+
     for i in range(0, len(gameBoard)):
         for j in range(0, len(gameBoard[i])):
             if gameBoard[i][j] != gameBoardPrime[i][j]:
@@ -132,6 +136,9 @@ def gameBoardIsFull(gameBoard):
 
 
 def isOnWinningPath(gameBoard, pieceArray):
+    #print "isOnWinningPath"
+    if gameBoard == None:
+        return False
 
     if len(pieceArray) == 0 or gameBoardIsFull(gameBoard):
         return True
@@ -148,10 +155,14 @@ def isOnWinningPath(gameBoard, pieceArray):
     return True
 
 def smartInsert(gameBoard, piece, pieceArray):
+    #print "smartInsert"
+    count = 0
     for y in range (0, len(gameBoard)-1): # each row
         for x in range(0, len(gameBoard[0])-1): # each column
             for ab in range(0,2):
                 for ba in range(0,4):
+                    count = count + 1
+                    #print count
                     if isValidMove(gameBoard, piece, x, y):
                         tempGameBoard = copy.deepcopy(gameBoard)
                         tempGameBoard = addPieceAtLocation(tempGameBoard, piece, x, y)
@@ -165,13 +176,14 @@ def smartInsert(gameBoard, piece, pieceArray):
                     else:
                         piece = rotateNinety(piece)
                 piece = flipPiece(piece)
-    return gameBoard
+    return None
 
 
 def recursiveSolve(gameBoard, pieceArray):
+    print len(pieceArray)
     if len(pieceArray) == 0:
         return gameBoard
-
+    index = 0
     while (len(pieceArray) > 0):
 
         indexOfPieceToRemove = int((random.random() * 100) % len(pieceArray))
@@ -182,34 +194,40 @@ def recursiveSolve(gameBoard, pieceArray):
         gameBoard = smartInsert(gameBoard, pieceToTest, pieceArray)
         gameBoard = gameBoardHeatMap(gameBoard)
         printBoard(gameBoard)
+        gameBoardDrawVariable.drawGameBoard(gameBoard, index)
+        index = index + 1
 
         print ""
+    turtle.mainloop()
+    turtle.done()
 
 
 
 
+'''
+# 5x5 board
+pieceOne = [[0,9],[0,9],[0,9],[0,9],[0,9]]
+pieceTwo = [[9,0],[9,9],[9,0]]
+pieceThree = [[9,9],[9,0],[9,9]]
+pieceFour = [[9,0],[9,0]]
+pieceFive = [[9,0]]
+pieceSix = [[0,9,9],[9,9,0]]
+pieceSeven = [[0,9],[0,9],[9,9]]
 
+pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour, pieceFive, pieceSix, pieceSeven]
+'''
+pieceOne = [[9,9],[9,9],[9,0]]
+pieceTwo = [[9,0],[0,0]]
+pieceSix = [[9,9],[9,0],[9,0]]
+pieceThree = [[9,0],[9,0],[9,9],[0,9]]
+pieceFour = [[9,0],[9,9]]
+pieceFive = [[9,9]]
 
-pieceOne = [[0,9],[9,9],[0,9]]
-pieceTwo = [[9,9],[9,0],[9,9]]
-pieceThree = [[9,0],[9,0],[9,0],[9,0]]
-pieceFour = [[9,0],[9,0],[9,0]]
-
-#pieceFour = [[1,0]]
-#pieceFive = [[1,0],[1,0]]
-#pieceSix = [[1,0],[1,1],[0,1]]
-#pieceSeven = [[0,1],[0,1],[1,1]]
-#pieceThree = [[1,1],[1,0]]
-#pieceFour = [[1,0],[1,0]]
-
-pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour] #, pieceFive, pieceSix, pieceSeven]
-
-roomToMove = True
-
-mainGameBoard = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+mainGameBoard = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
 
 mainGameBoard = gameBoardHeatMap(mainGameBoard)
 
+pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour, pieceFive, pieceSix]
 recursiveSolve(mainGameBoard, pieceArray)
 print "Comparisons : " + str(comparisons)
 
