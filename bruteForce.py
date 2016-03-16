@@ -1,3 +1,5 @@
+# https://deepmind.com/alpha-go.html
+
 from matplotlib import mpl, pyplot
 from numpy import array
 import random

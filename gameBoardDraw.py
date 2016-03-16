@@ -85,5 +85,5 @@ class gameBoardDraw(object):
 
         ts = self.turtle.getscreen()
 
-        ts.getcanvas().postscript(file="game_" + str(datetime.datetime.now()) + ".eps")# + str(step) + ".eps")
+        ts.getcanvas().postscript(file="games/game_" + str(datetime.datetime.now()) + ".eps")# + str(step) + ".eps")
 
