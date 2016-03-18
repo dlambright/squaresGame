@@ -87,3 +87,5 @@ class gameBoardDraw(object):
 
         ts.getcanvas().postscript(file="games/game_" + str(datetime.datetime.now()) + ".eps")# + str(step) + ".eps")
 
+
+

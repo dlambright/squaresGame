@@ -12,7 +12,7 @@ from gameBoardDraw import gameBoardDraw
 functionCalls = 0
 comparisons = 0
 
-gameBoardDrawVariable = gameBoardDraw(20)
+gameBoardDrawVariable = gameBoardDraw(15)
 
 def gameBoardHeatMap(gameBoard):
     for i in range(0,len(gameBoard)):
@@ -224,12 +224,13 @@ pieceSix = [[9,9],[9,0],[9,0]]
 pieceThree = [[9,0],[9,0],[9,9],[0,9]]
 pieceFour = [[9,0],[9,9]]
 pieceFive = [[9,9]]
+pieceSeven = [[1,1,1],[0,1,0],[0,1,0]]
 
-mainGameBoard = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+mainGameBoard = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
 
 mainGameBoard = gameBoardHeatMap(mainGameBoard)
 
-pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour, pieceFive, pieceSix]
+pieceArray = [pieceOne, pieceTwo, pieceThree, pieceFour, pieceFive, pieceSix, pieceSeven]
 recursiveSolve(mainGameBoard, pieceArray)
 print "Comparisons : " + str(comparisons)
 
@@ -243,6 +244,14 @@ for piece in pieceArray:
 '''
 
 
+'''
+things to print:
+- x location
+- y location
+- turns
+- flipped or no
+- maybe board weight
+'''
 
 
 
