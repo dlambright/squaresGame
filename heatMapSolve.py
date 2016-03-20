@@ -1,5 +1,9 @@
 import json
+import random
+import copy
+from gameBoardDraw import gameBoardDraw
 
+gameBoardDrawVariable = gameBoardDraw(15)
 
 pieceArray = []
 
@@ -17,6 +21,42 @@ gameBoard = [[0,0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0,0]]
 
 
+
+def isValidMove(gameBoard, piece, startX, startY):
+    boardHeight = len(gameBoard)
+    boardLength = len(gameBoard[0])
+    pieceHeight = len(piece)
+    pieceLength = len(piece[0])
+
+    if startX + pieceLength > boardLength:
+        #print "too long"
+        return False
+    if startY + pieceHeight > boardHeight:
+        #print "too tall"
+        return False
+
+    for i in range(0, len(piece)):
+        for j in range(0, len(piece[0])):
+            if startX + j > len(gameBoard[0])-1 or startY + i > len(gameBoard)-1:
+                return False
+
+            if piece[i][j] == 9 and gameBoard[startY + i][startX + j] == 9:
+                #print "overlap error"
+                return False
+
+
+    return True
+
+
+def getBoardValue(gameBoard):
+
+    total = 0
+    for row in gameBoard:
+        for item in row:
+            if item != 9:
+                total = total + item
+
+    return total
 
 
 def flipPiece(piece):
@@ -71,7 +111,7 @@ def gameBoardHeatMap(gameBoard):
 def insertPieceByCode(gameBoard, code):
     codeBits = code.split("|")
 
-    piece = pieceArray["c"]
+    piece = pieceArray[code[0]]
 
     pieceFlipped = int(codeBits[1])
     if pieceFlipped == 1:
@@ -87,12 +127,64 @@ def insertPieceByCode(gameBoard, code):
     # make sure that this is being passed by refernece, not by value
     gameBoard = addPieceAtLocation(gameBoard, piece, pieceX, pieceY)
 
+    return gameBoard
 
 
-gameBoard = gameBoardHeatMap(gameBoard)
+def findOptimalSpot(gameBoard, piece, insertionCode):
+    boardScore = -1
+    insertionChar = insertionCode[0]
+    insertionCode = "no insertion"
+    for y in range (0, len(gameBoard)-1): # each row
+        for x in range(0, len(gameBoard[0])-1): # each column
+            for flipped in range(0,2):
+                for rotations in range(0,4):
+                    if isValidMove(gameBoard, piece, x, y):
+                        tempGameBoard = copy.deepcopy(gameBoard)
+                        tempGameBoard = addPieceAtLocation(tempGameBoard, piece, x ,y)
+                        if getBoardValue(tempGameBoard) > boardScore:
+                            boardScore = getBoardValue(tempGameBoard)
+                            insertionCode = [insertionChar, flipped, rotations, x, y]
+                    piece = rotateNinety(piece)
+            piece = flipPiece(piece)
+
+    return insertionCode
+
+
+
+
+
+
+while True:
+    pieceKeys = pieceArray.keys()
+    indexOfPieceToRemove = int((random.random() * 100) % len(pieceArray))
+    pieceToInsert = pieceArray[pieceKeys[indexOfPieceToRemove]]
+    gameBoard = gameBoardHeatMap(gameBoard)
+    insertionCode = [pieceKeys[indexOfPieceToRemove], 0, 0, 0, 0]
+    moveArray = findOptimalSpot(gameBoard, pieceToInsert, insertionCode)
+    if moveArray != "no insertion":
+        moveArrayString = moveArray[0]+"|" + str(moveArray[1])+"|" + str(moveArray[2])+ "|" + str(moveArray[3]) + "|" + str(moveArray[4])
+        print moveArrayString
+        gameBoard = insertPieceByCode(gameBoard, moveArrayString)
+        gameBoard = gameBoardHeatMap(gameBoard)
+        del pieceArray[pieceKeys[indexOfPieceToRemove]]
+        pieceKeys.remove(pieceKeys[indexOfPieceToRemove])
+    else:
+        print "\n\n"
+        print pieceToInsert
+        print getBoardValue(gameBoard)
+        break
+
+gameBoardDrawVariable.drawGameBoard(gameBoard, 0)
+
+
+
+
+'''
+
+getBoardValue(gameBoard)
 insertPieceByCode(gameBoard, "c|0|1|2|2")
-
-
+getBoardValue(gameBoard)
+'''
 
 
 '''

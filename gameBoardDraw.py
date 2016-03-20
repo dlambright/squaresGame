@@ -9,7 +9,7 @@ class gameBoardDraw(object):
         self.squareSize = square_size
         self.moveNumber = 0
         self.startX = 0
-        self.startY = 300 # set hieght / 2
+        self.startY = 100 # set hieght / 2
 
     def draw_empty_square(self):
         """Draw a square by drawing a line and turning through 90 degrees 4 times"""
@@ -77,7 +77,7 @@ class gameBoardDraw(object):
         wn = turtle.Screen()
         wn.bgcolor("gray")
         wn.title("Shut up Drew Brees")
-        wn.setup( width = 300, height = 1000, startx = None, starty = None)
+        wn.setup( width = 500, height = 500, startx = None, starty = None)
         self.moveNumber = step
 
         self.turtle = turtle.Turtle()
