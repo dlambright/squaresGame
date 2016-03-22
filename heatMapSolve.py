@@ -153,52 +153,74 @@ def findOptimalSpot(gameBoard, piece, insertionCode):
 
 
 
+def populateTwentyThousandGames():
+    for notGonnaUseThatB in range(1,101):
 
-for notGonnaUseThatB in range(1,20001):
+        with open('pieces.txt', 'r+') as inFile:
+            pieceArray = json.load(inFile)
 
-    with open('pieces.txt', 'r+') as inFile:
-        pieceArray = json.load(inFile)
+        gameBoard = [[0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0]]
 
-    gameBoard = [[0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0]]
-
-    keepGoing = True
-    pieceMoves = 0
-    finalOutputStrings = []
-    while keepGoing == True:
-        pieceKeys = pieceArray.keys()
-        indexOfPieceToRemove = int((random.random() * 100) % len(pieceArray))
-        pieceToInsert = pieceArray[pieceKeys[indexOfPieceToRemove]]
-        gameBoard = gameBoardHeatMap(gameBoard)
-        insertionCode = [pieceKeys[indexOfPieceToRemove], 0, 0, 0, 0]
-        moveArray = findOptimalSpot(gameBoard, pieceToInsert, insertionCode)
-        if moveArray != "no insertion":
-            moveArrayString = moveArray[0]+"|" + str(moveArray[1])+"|" + str(moveArray[2])+ "|" + str(moveArray[3]) + "|" + str(moveArray[4])
-            finalOutputStrings.append(moveArrayString)
-            gameBoard = insertPieceByCode(gameBoard, moveArrayString)
+        keepGoing = True
+        pieceMoves = 0
+        finalOutputStrings = []
+        while keepGoing == True:
+            pieceKeys = pieceArray.keys()
+            indexOfPieceToRemove = int((random.random() * 100) % len(pieceArray))
+            pieceToInsert = pieceArray[pieceKeys[indexOfPieceToRemove]]
             gameBoard = gameBoardHeatMap(gameBoard)
-            del pieceArray[pieceKeys[indexOfPieceToRemove]]
-            pieceKeys.remove(pieceKeys[indexOfPieceToRemove])
-        else:
-            keepGoing = False
-            finalOutputStrings.append(str(getBoardValue(gameBoard)))
-            with open ("games/"+ str(notGonnaUseThatB)+".sqgm", "w") as writeFile:
-                for item in finalOutputStrings:
-                    writeFile.write(item + "\n")
+            insertionCode = [pieceKeys[indexOfPieceToRemove], 0, 0, 0, 0]
+            moveArray = findOptimalSpot(gameBoard, pieceToInsert, insertionCode)
+            if moveArray != "no insertion":
+                moveArrayString = moveArray[0]+"|" + str(moveArray[1])+"|" + str(moveArray[2])+ "|" + str(moveArray[3]) + "|" + str(moveArray[4])
+                finalOutputStrings.append(moveArrayString)
+                gameBoard = insertPieceByCode(gameBoard, moveArrayString)
+                gameBoard = gameBoardHeatMap(gameBoard)
+                del pieceArray[pieceKeys[indexOfPieceToRemove]]
+                pieceKeys.remove(pieceKeys[indexOfPieceToRemove])
+            else:
+                keepGoing = False
+                finalOutputStrings.append(str(getBoardValue(gameBoard)))
+                with open ("games/"+ str(notGonnaUseThatB)+".sqgm", "w") as writeFile:
+                    for item in finalOutputStrings:
+                        writeFile.write(item + "\n")
 
-            if notGonnaUseThatB % 100 == 0:
-                print notGonnaUseThatB
+                if notGonnaUseThatB % 100 == 0:
+                    print notGonnaUseThatB
 
-    #gameBoardDrawVariable.drawGameBoard(gameBoard, 0)
+        #gameBoardDrawVariable.drawGameBoard(gameBoard, 0)
 
 
+with open('pieces.txt', 'r+') as inFile:
+    pieceArray = json.load(inFile)
+
+gameBoard = [[0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0]]
+
+with open("games/1.sqgm", "r+") as openFile:
+    readString = openFile.readlines();
+
+del readString[-1]
+for line in readString:
+    gameBoard = insertPieceByCode(gameBoard, line)
+    gameBoard = gameBoardHeatMap(gameBoard)
+    gameBoardDrawVariable = gameBoardDraw(15)
+    gameBoardDrawVariable.drawGameBoard(gameBoard, 0)
 
 
 '''
