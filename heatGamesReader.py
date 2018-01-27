@@ -27,5 +27,5 @@ class heatGamesReader:
 
 
 
-HGR = heatGamesReader()
+#HGR = heatGamesReader()
 
